@@ -1,0 +1,16 @@
+# Common
+.env
+.DS_Store
+
+# Node
+node_modules/
+npm-debug.log*
+yarn.lock
+
+# Backend
+backend-project/dist/
+
+# Frontend
+frontend-project/build/
+frontend-project/dist/
+
