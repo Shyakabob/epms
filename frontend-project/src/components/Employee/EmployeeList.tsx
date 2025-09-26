@@ -167,11 +167,9 @@ const EmployeeList: React.FC = () => {
         onClose={handleCloseAlert}
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
-        {alert && (
-          <Alert onClose={handleCloseAlert} severity={alert.severity}>
-            {alert.message}
-          </Alert>
-        )}
+        <Alert onClose={handleCloseAlert} severity={alert?.severity ?? 'success'}>
+          {alert?.message ?? ''}
+        </Alert>
       </Snackbar>
     </div>
   );

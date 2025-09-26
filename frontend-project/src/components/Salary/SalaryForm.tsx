@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, MenuItem } from '@mui/material';
-import Grid from '@mui/material/Grid';
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, MenuItem, Box } from '@mui/material';
 import { Employee, Salary } from '../../types';
 import { getEmployees, createSalary, updateSalary } from '../../services/api';
 
@@ -66,8 +65,8 @@ const SalaryForm: React.FC<SalaryFormProps> = ({ open, onClose, initialValue }) 
 		<Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
 			<DialogTitle>{isEdit ? 'Edit Salary' : 'Add Salary'}</DialogTitle>
 			<DialogContent>
-				<Grid container spacing={2} sx={{ mt: 0.5 }}>
-					<Grid item xs={12}>
+				<Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 2, mt: 0.5 }}>
+					<Box sx={{ gridColumn: '1 / -1' }}>
 						<TextField select fullWidth label="Employee" value={form.employeeNumber} onChange={handleChange('employeeNumber')} disabled={isEdit}>
 							{employees.map((emp) => (
 								<MenuItem key={emp.employeeNumber} value={emp.employeeNumber}>
@@ -75,20 +74,20 @@ const SalaryForm: React.FC<SalaryFormProps> = ({ open, onClose, initialValue }) 
 								</MenuItem>
 							))}
 						</TextField>
-					</Grid>
-					<Grid item xs={12} sm={6}>
+					</Box>
+					<Box>
 						<TextField type="month" fullWidth label="Month" value={form.month} onChange={handleChange('month')} disabled={isEdit} InputLabelProps={{ shrink: true }} />
-					</Grid>
-					<Grid item xs={12} sm={6}>
+					</Box>
+					<Box>
 						<TextField type="number" fullWidth label="Gross Salary (RWF)" value={form.grossSalary} onChange={handleChange('grossSalary')} inputProps={{ min: 0, step: 100 }} />
-					</Grid>
-					<Grid item xs={12} sm={6}>
+					</Box>
+					<Box>
 						<TextField type="number" fullWidth label="Total Deduction (RWF)" value={form.totalDeduction} onChange={handleChange('totalDeduction')} inputProps={{ min: 0, step: 100 }} />
-					</Grid>
-					<Grid item xs={12} sm={6}>
+					</Box>
+					<Box>
 						<TextField fullWidth label="Net Salary" value={rwfFormatter.format(form.netSalary)} InputProps={{ readOnly: true }} />
-					</Grid>
-				</Grid>
+					</Box>
+				</Box>
 			</DialogContent>
 			<DialogActions>
 				<Button onClick={onClose}>Cancel</Button>

@@ -10,8 +10,9 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  Grid,
+  Box,
 } from '@mui/material';
+import { SelectChangeEvent } from '@mui/material/Select';
 import { Employee } from '../../types';
 import { getDepartments } from '../../services/api';
 import { Department } from '../../types';
@@ -64,12 +65,14 @@ const EmployeeForm: React.FC<EmployeeFormProps> = ({
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setEmployee((prev) => ({
-      ...prev,
-      [name as string]: value,
-    }));
+    setEmployee((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSelectChange = (e: SelectChangeEvent) => {
+    const { name, value } = e.target;
+    setEmployee((prev) => ({ ...prev, [name as string]: value }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -82,25 +85,25 @@ const EmployeeForm: React.FC<EmployeeFormProps> = ({
       <form onSubmit={handleSubmit}>
         <DialogTitle>{title}</DialogTitle>
         <DialogContent>
-          <Grid container spacing={2} sx={{ mt: 1 }}>
-            <Grid item xs={6}>
+          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 2, mt: 1 }}>
+            <Box>
               <TextField
                 name="employeeNumber"
                 label="Employee Number"
                 fullWidth
                 required
                 value={employee.employeeNumber}
-                onChange={handleChange}
+                onChange={handleInputChange}
                 disabled={!!initialData}
               />
-            </Grid>
-            <Grid item xs={6}>
+            </Box>
+            <Box>
               <FormControl fullWidth required>
                 <InputLabel>Department</InputLabel>
                 <Select
                   name="departmentCode"
                   value={employee.departmentCode}
-                  onChange={handleChange}
+                  onChange={handleSelectChange}
                   label="Department"
                 >
                   {departments.map((dept) => (
@@ -110,72 +113,72 @@ const EmployeeForm: React.FC<EmployeeFormProps> = ({
                   ))}
                 </Select>
               </FormControl>
-            </Grid>
-            <Grid item xs={6}>
+            </Box>
+            <Box>
               <TextField
                 name="firstName"
                 label="First Name"
                 fullWidth
                 required
                 value={employee.firstName}
-                onChange={handleChange}
+                onChange={handleInputChange}
               />
-            </Grid>
-            <Grid item xs={6}>
+            </Box>
+            <Box>
               <TextField
                 name="lastName"
                 label="Last Name"
                 fullWidth
                 required
                 value={employee.lastName}
-                onChange={handleChange}
+                onChange={handleInputChange}
               />
-            </Grid>
-            <Grid item xs={6}>
+            </Box>
+            <Box>
               <TextField
                 name="position"
                 label="Position"
                 fullWidth
                 required
                 value={employee.position}
-                onChange={handleChange}
+                onChange={handleInputChange}
               />
-            </Grid>
-            <Grid item xs={6}>
+            </Box>
+            <Box>
               <FormControl fullWidth required>
                 <InputLabel>Gender</InputLabel>
                 <Select
                   name="gender"
                   value={employee.gender}
-                  onChange={handleChange}
+                  onChange={handleSelectChange}
                   label="Gender"
                 >
                   <MenuItem value="M">Male</MenuItem>
                   <MenuItem value="F">Female</MenuItem>
                 </Select>
               </FormControl>
-            </Grid>
-            <Grid item xs={12}>
+            </Box>
+            <Box sx={{ gridColumn: '1 / -1' }}>
               <TextField
                 name="address"
                 label="Address"
                 fullWidth
                 required
                 value={employee.address}
-                onChange={handleChange}
+                onChange={handleInputChange}
               />
-            </Grid>
-            <Grid item xs={6}>
+            </Box>
+            <Box>
               <TextField
                 name="telephone"
                 label="Telephone"
                 fullWidth
                 required
                 value={employee.telephone}
-                onChange={handleChange}
+                onChange={handleInputChange}
               />
-            </Grid>
-            <Grid item xs={6}>
+            </Box>
+            <Box>
               <TextField
                 name="hireDate"
                 label="Hire Date"
@@ -183,13 +186,13 @@ const EmployeeForm: React.FC<EmployeeFormProps> = ({
                 fullWidth
                 required
                 value={employee.hireDate}
-                onChange={handleChange}
+                onChange={handleInputChange}
                 InputLabelProps={{
                   shrink: true,
                 }}
               />
-            </Grid>
-          </Grid>
+            </Box>
+          </Box>
         </DialogContent>
         <DialogActions>
           <Button onClick={onClose}>Cancel</Button>

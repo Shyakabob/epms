@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField } from '@mui/material';
-import Grid from '@mui/material/Grid';
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, Box } from '@mui/material';
 import { Department } from '../../types';
 import { createDepartment, updateDepartment } from '../../services/api';
 
@@ -43,20 +42,20 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({ open, onClose, initialV
 		<Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
 			<DialogTitle>{isEdit ? 'Edit Department' : 'Add Department'}</DialogTitle>
 			<DialogContent>
-				<Grid container spacing={2} sx={{ mt: 0.5 }}>
-					<Grid item xs={12} sm={4}>
+				<Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '2fr 3fr' }, gap: 2, mt: 0.5 }}>
+					<Box>
 						<TextField label="Code" fullWidth value={form.departmentCode} onChange={handleChange('departmentCode')} disabled={isEdit} />
-					</Grid>
-					<Grid item xs={12} sm={8}>
+					</Box>
+					<Box>
 						<TextField label="Name" fullWidth value={form.departmentName} onChange={handleChange('departmentName')} />
-					</Grid>
-					<Grid item xs={12} sm={6}>
+					</Box>
+					<Box>
 						<TextField type="number" label="Gross Salary (RWF)" fullWidth value={form.grossSalary} onChange={handleChange('grossSalary')} inputProps={{ min: 0, step: 100 }} />
-					</Grid>
-					<Grid item xs={12} sm={6}>
+					</Box>
+					<Box>
 						<TextField type="number" label="Total Deduction (RWF)" fullWidth value={form.totalDeduction} onChange={handleChange('totalDeduction')} inputProps={{ min: 0, step: 100 }} />
-					</Grid>
-				</Grid>
+					</Box>
+				</Box>
 			</DialogContent>
 			<DialogActions>
 				<Button onClick={onClose}>Cancel</Button>
