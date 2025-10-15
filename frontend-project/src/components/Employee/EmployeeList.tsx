@@ -13,22 +13,43 @@ import {
   Stack,
   Alert,
   Snackbar,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Chip,
+  Box,
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { Employee } from '../../types';
-import { getEmployees, createEmployee, updateEmployee, deleteEmployee } from '../../services/api';
+import FilterListIcon from '@mui/icons-material/FilterList';
+import ClearIcon from '@mui/icons-material/Clear';
+import { Employee, Department } from '../../types';
+import { getEmployees, createEmployee, updateEmployee, deleteEmployee, getDepartments } from '../../services/api';
 import EmployeeForm from './EmployeeForm';
 
 const EmployeeList: React.FC = () => {
   const [employees, setEmployees] = useState<Employee[]>([]);
+  const [departments, setDepartments] = useState<Department[]>([]);
+  const [filteredEmployees, setFilteredEmployees] = useState<Employee[]>([]);
+  const [selectedDepartment, setSelectedDepartment] = useState<string>('');
   const [openForm, setOpenForm] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState<Employee | undefined>();
   const [alert, setAlert] = useState<{ message: string; severity: 'success' | 'error' } | null>(null);
 
   useEffect(() => {
     fetchEmployees();
-  }, []);
+    fetchDepartments();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    if (selectedDepartment) {
+      const filtered = employees.filter(emp => emp.departmentCode === selectedDepartment);
+      setFilteredEmployees(filtered);
+    } else {
+      setFilteredEmployees(employees);
+    }
+  }, [employees, selectedDepartment]);
 
   const fetchEmployees = async () => {
     try {
@@ -38,6 +59,24 @@ const EmployeeList: React.FC = () => {
       console.error('Error fetching employees:', error);
       showAlert('Error fetching employees', 'error');
     }
+  };
+
+  const fetchDepartments = async () => {
+    try {
+      const response = await getDepartments();
+      setDepartments(response.data);
+    } catch (error) {
+      console.error('Error fetching departments:', error);
+      showAlert('Error fetching departments', 'error');
+    }
+  };
+
+  const handleDepartmentFilter = (departmentCode: string) => {
+    setSelectedDepartment(departmentCode);
+  };
+
+  const clearFilter = () => {
+    setSelectedDepartment('');
   };
 
   const handleCreate = async (employee: Employee) => {
@@ -111,6 +150,50 @@ const EmployeeList: React.FC = () => {
         </Button>
       </Stack>
 
+      {/* Department Filter Section */}
+      <Box sx={{ mb: 3, p: 2, bgcolor: 'grey.50', borderRadius: 1 }}>
+        <Stack direction="row" alignItems="center" spacing={2} flexWrap="wrap">
+          <FilterListIcon color="primary" />
+          <Typography variant="h6" color="primary">
+            Filter by Department:
+          </Typography>
+          <FormControl sx={{ minWidth: 200 }}>
+            <InputLabel>Select Department</InputLabel>
+            <Select
+              value={selectedDepartment}
+              label="Select Department"
+              onChange={(e) => handleDepartmentFilter(e.target.value)}
+            >
+              <MenuItem value="">
+                <em>All Departments</em>
+              </MenuItem>
+              {departments.map((dept) => (
+                <MenuItem key={dept.departmentCode} value={dept.departmentCode}>
+                  {dept.departmentName} ({dept.departmentCode})
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          {selectedDepartment && (
+            <>
+              <Chip
+                label={`${departments.find(d => d.departmentCode === selectedDepartment)?.departmentName || selectedDepartment} (${filteredEmployees.length} employees)`}
+                color="primary"
+                variant="outlined"
+              />
+              <Button
+                startIcon={<ClearIcon />}
+                onClick={clearFilter}
+                variant="outlined"
+                size="small"
+              >
+                Clear Filter
+              </Button>
+            </>
+          )}
+        </Stack>
+      </Box>
+
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -125,7 +208,7 @@ const EmployeeList: React.FC = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {employees.map((employee) => (
+            {filteredEmployees.map((employee) => (
               <TableRow key={employee.employeeNumber}>
                 <TableCell>{employee.employeeNumber}</TableCell>
                 <TableCell>{`${employee.firstName} ${employee.lastName}`}</TableCell>

@@ -1,4 +1,5 @@
 import pool from '../config/database';
+import bcrypt from 'bcryptjs';
 
 async function createAdminUser() {
     try {
@@ -9,10 +10,11 @@ async function createAdminUser() {
         // Delete existing admin user if exists
         await pool.query('DELETE FROM users WHERE username = ?', [username]);
 
-        // Insert new admin user with plain password
+        // Insert new admin user with hashed password
+        const hashedPassword = await bcrypt.hash(password, 10);
         await pool.query(
             'INSERT INTO users (username, password, role) VALUES (?, ?, ?)',
-            [username, password, role]
+            [username, hashedPassword, role]
         );
 
         console.log('Admin user created successfully');

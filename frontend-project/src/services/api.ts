@@ -34,6 +34,13 @@ export const login = (username: string, password: string) =>
 
 export const getCurrentUser = () => api.get('/auth/me');
 
+// Password endpoints
+export const verifyPassword = (currentPassword: string) =>
+    api.post('/auth/verify-password', { currentPassword });
+
+export const changePassword = (currentPassword: string, newPassword: string) =>
+    api.post('/auth/change-password', { currentPassword, newPassword });
+
 // Employee endpoints
 export const getEmployees = () => api.get<Employee[]>('/employees');
 export const createEmployee = (employee: Employee) => api.post('/employees', employee);
