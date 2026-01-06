@@ -67,7 +67,5 @@ INSERT INTO salaries (employeeNumber, grossSalary, totalDeduction, netSalary, mo
 ('EMP007', 450000, 40000, 410000, '2024-05'),
 ('EMP008', 600000, 70000, 530000, '2024-05');
 
--- Delete existing users (if any) and insert default admin user
-DELETE FROM users;
-INSERT INTO users (username, password, role) VALUES
-('admin', 'admin123', 'admin'); 
+-- NOTE: Admin user seeding moved to script to ensure correct bcrypt hashing.
+-- Run the script at `src/scripts/createAdmin.ts` after database setup to create the admin user.

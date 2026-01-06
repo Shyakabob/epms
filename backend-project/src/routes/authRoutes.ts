@@ -12,6 +12,8 @@ const router = express.Router();
 router.post('/login', async (req: Request, res: Response) => {
     try {
         const { username, password } = req.body;
+        
+        console.log('Login attempt:', { username, passwordLength: password?.length });
 
         // Get user from database
         const [users] = await pool.query<User[]>(
@@ -19,15 +21,22 @@ router.post('/login', async (req: Request, res: Response) => {
             [username]
         );
 
+        console.log('Database query result:', { userCount: users.length, foundUser: users[0] ? { id: users[0].id, username: users[0].username, role: users[0].role, passwordHash: users[0].password.substring(0, 20) + '...' } : null });
+
         if (users.length === 0) {
+            console.log('No user found with username:', username);
             return res.status(401).json({ message: 'Invalid credentials' });
         }
 
         const user = users[0];
 
         // Check password using bcrypt hash
+        console.log('Comparing password...');
         const isMatch = await bcrypt.compare(password, user.password);
+        console.log('Password match result:', isMatch);
+        
         if (!isMatch) {
+            console.log('Password does not match');
             return res.status(401).json({ message: 'Invalid credentials' });
         }
 
