@@ -104,4 +104,4 @@ The application will be available at http://localhost:3000
 - TypeScript
 - Material-UI
 - axios
-- react-router-dom 
+- react-router-dom
