@@ -9,8 +9,6 @@ interface DepartmentFormProps {
 	initialValue?: Department | null;
 }
 
-const rwf = new Intl.NumberFormat('en-RW', { style: 'currency', currency: 'RWF', maximumFractionDigits: 0 });
-
 const DepartmentForm: React.FC<DepartmentFormProps> = ({ open, onClose, initialValue }) => {
 	const [form, setForm] = useState<Department>({
 		departmentCode: '',
